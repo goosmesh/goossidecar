@@ -1,6 +1,8 @@
-package gooswhoami
+package goos_whoiam
 
 import (
+	"github.com/coredns/coredns/core/dnsserver"
+	"github.com/coredns/coredns/plugin"
 	"log"
 	"github.com/mholt/caddy"
 )
@@ -17,5 +19,10 @@ func setup(c *caddy.Controller) error {
 	for c.NextArg() {
 		log.Println(c.Val())
 	}
+	dnsserver.GetConfig(c).AddPlugin(func(next plugin.Handler) plugin.Handler {
+		return Whoami{}
+	})
+
+
 	return nil
 }
