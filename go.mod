@@ -1,4 +1,4 @@
-module goos-sidecar
+module github.com/jsen-joker/goos-sidercar
 
 go 1.12
 
