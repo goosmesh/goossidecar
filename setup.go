@@ -1,4 +1,4 @@
-package goos_sidecar
+package gooswhoami
 
 import (
 	"log"
