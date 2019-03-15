@@ -1,4 +1,4 @@
-package goos_whoiam
+package goos_whoami
 
 import (
 	"github.com/coredns/coredns/core/dnsserver"
