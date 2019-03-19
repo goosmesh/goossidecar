@@ -1,7 +1,7 @@
 package nacos
 
 import (
-	"github.com/goosmesh/goos-sidecar/plugins/config/common"
+	"github.com/goosmesh/goossidecar/plugins/config/common"
 	"github.com/goosmesh/goos/core/utils"
 	"github.com/prometheus/common/log"
 	"net/http"

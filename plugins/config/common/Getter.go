@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/goosmesh/goos-sidecar/utils/net"
+	"github.com/goosmesh/goossidecar/utils/net"
 )
 
 var (
