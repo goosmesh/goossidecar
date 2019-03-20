@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	DEFAULT_GOOS_ADDRESS = "http://goos:4321"
+	DEFAULT_GOOS_ADDRESS = "http://server.goos:4321"
 	API_PUB = "/api/pub"
 	API_CONFIG = API_PUB + "/config/get"
 )
