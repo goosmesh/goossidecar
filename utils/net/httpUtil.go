@@ -1,6 +1,7 @@
 package net
 
 import (
+	"github.com/goosmesh/goos/core/utils/alg"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
@@ -70,5 +71,7 @@ func Get(url string, params map[string] string) (result string, err error) {
 	}
 
 	bs := string(b)
-	return bs, nil
+
+	// 解码数据
+	return alg.RsaDecrypt(bs)
 }
