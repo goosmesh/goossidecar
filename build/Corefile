@@ -1,0 +1,6 @@
+.:53 {
+  cache
+  goosnacosconfig
+  forward . 127.0.0.1:54
+  errors
+}
