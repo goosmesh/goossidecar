@@ -2,6 +2,7 @@ package common
 
 import (
 	"github.com/goosmesh/goossidecar/utils/net"
+	"github.com/prometheus/common/log"
 )
 
 var (
@@ -21,5 +22,6 @@ func GetConfig(dataId string, groupId string, namespaceId string) (result string
 	if namespaceId != "" {
 		params["namespaceId"] = namespaceId
 	}
+	log.Info(DEFAULT_GOOS_ADDRESS + API_CONFIG)
 	return net.Get(DEFAULT_GOOS_ADDRESS + API_CONFIG, params)
 }
