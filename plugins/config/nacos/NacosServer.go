@@ -16,7 +16,7 @@ func StartServer()  {
 	http.HandleFunc("/nacos/v1/cs/configs", rpConfigs.ServeHTTP)
 	http.HandleFunc("/nacos/v1/cs/configs/listener", rpConfigsListener.ServeHTTP)
 
-	_ = http.ListenAndServe(":4322", nil)
+	_ = http.ListenAndServe(":4323", nil)
 }
 
 //func nacosConfigs(w http.ResponseWriter, r *http.Request) {
