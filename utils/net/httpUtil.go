@@ -75,3 +75,43 @@ func Get(url string, params map[string] string) (result string, err error) {
 	// 解码数据
 	return alg.RsaDecrypt(bs)
 }
+
+func Post(url string, params map[string] string) (result string, err error)  {
+
+	if params == nil {
+		params = make(map[string]string)
+	}
+
+	url = encodeUrl(url, params)
+
+	req, err := http.NewRequest("POST",url, nil)
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Add("Client-Version", Version)
+	response, err := httpClient.Do(req)
+
+	if err != nil {
+		return "", err
+	}
+
+	if response.StatusCode != 200 {
+		return "", errors.New("error status : " + strconv.Itoa(response.StatusCode))
+	}
+
+
+	b, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return "", err
+	}
+	err = response.Body.Close()
+	if err != nil {
+		return "", err
+	}
+
+	bs := string(b)
+
+	// 解码数据
+	return alg.RsaDecrypt(bs)
+}

@@ -18,3 +18,7 @@
     
 
 spring application
+
+plugins/config  第三方配置文件框架适配
+plugins/dns 提供注册本地dns功能（nacos适配要注册到本地dns）
+plugins/proxy   一个极其简单的sidecar 代理，改写iptables，使所有流量都转到这个proxy，proxy获取请求源的信息，获取dns信息，根据负载均衡获得一个具体的请求实例serviceB
