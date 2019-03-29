@@ -6,7 +6,6 @@ import (
 )
 
 var (
-	DEFAULT_GOOS_ADDRESS = "http://server.goos:4321"
 	DEFAULT_GOOS_HOST = "server.goos:4321"
 	API_PUB = "/api/pub"
 	API_CONFIG = API_PUB + "/config/get"
@@ -17,12 +16,16 @@ type RProxy struct {
 	//  server.goos:4321
 	Host string
 	Path string
+	Director func(*http.Request)
 	ModifyResponse func(*http.Response, http.ResponseWriter) error
 }
 
 
 func (rproxy *RProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	director := func(req *http.Request) {
+		if rproxy.Director != nil {
+			rproxy.Director(req)
+		}
 		if len(r.URL.Scheme) == 0 {
 			req.URL.Scheme = "http"
 		} else {
