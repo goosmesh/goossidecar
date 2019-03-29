@@ -6,7 +6,7 @@ import (
 )
 
 func TestStartServer(t *testing.T) {
-	common.DEFAULT_GOOS_HOST = "server.goos:3321"
-	ServerPort = ":3322"
+	common.DEFAULT_GOOS_HOST = "server.goos:4321"
+	ServerPort = ":4322"
 	StartServer()
 }

@@ -1,7 +1,7 @@
 package nacos
 
 import (
-	"github.com/goosmesh/goos/core/utils"
+	"bytes"
 	"github.com/goosmesh/goos/core/utils/alg"
 	"github.com/goosmesh/goossidecar/plugins/config/common"
 	"github.com/prometheus/common/log"
@@ -44,23 +44,20 @@ func StartServer()  {
 		req.URL.RawQuery = strings.Replace(req.URL.RawQuery, "group=", "groupId=", 1)
 	}
 	listenerDirector := func(req *http.Request) {
-		probeModify, err := utils.GetParameter("Listening-Configs", false, "", nil, req)
-		if err != nil {
+		v := req.PostFormValue("Listening-Configs")
+
+		if v == "" {
 			return
 		}
-		nProbeModify := ParserMd5Data(probeModify)
-		query := ""
-		qs := strings.Split(req.URL.RawQuery, "&")
-		for _, v := range qs {
-			if strings.Index(v, "Listening-Configs=") == 0 {
-				query += "Listening-Configs=" + url.QueryEscape(nProbeModify) + "&"
-			} else {
-				query += v + "&"
-			}
-		}
-		log.Info(req.URL.RawQuery)
-		req.URL.RawQuery = query[:len(query) - 1]
-		log.Info(req.URL.RawQuery)
+
+		nProbeModify := ParserMd5Data(v)
+
+
+		body := [] byte("{\"Listening-Configs\":\"" + url.QueryEscape(nProbeModify) + "\"}")
+		req.ContentLength = int64(len(body))
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+
+		//net.WriteBody(strings.NewReader("Listening-Configs=" + url.QueryEscape(nProbeModify)), req)
 	}
 
 	rpConfigs := common.RProxy{Host: common.DEFAULT_GOOS_HOST, Path: common.API_CONFIG, ModifyResponse: modifyResponse, Director:configDirector}
