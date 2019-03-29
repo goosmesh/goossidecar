@@ -17,15 +17,34 @@ type RProxy struct {
 	//  server.goos:4321
 	Host string
 	Path string
+	ModifyResponse func(*http.Response, http.ResponseWriter) error
 }
+
 
 func (rproxy *RProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	director := func(req *http.Request) {
-		req.URL.Scheme = "http"
+		if len(r.URL.Scheme) == 0 {
+			req.URL.Scheme = "http"
+		} else {
+			req.URL.Scheme = r.URL.Scheme
+		}
 		req.URL.Host = rproxy.Host
 		req.URL.Path = rproxy.Path
 	}
 
-	proxy := httputil.ReverseProxy{Director:director}
-	proxy.ServeHTTP(w, r)
+	modifyResponse := func(resp *http.Response) error {
+		if rproxy.ModifyResponse != nil {
+			return rproxy.ModifyResponse(resp, w)
+		}
+		return nil
+	}
+
+	if rproxy.ModifyResponse != nil {
+		proxy := httputil.ReverseProxy{Director:director, ModifyResponse: modifyResponse}
+		proxy.ServeHTTP(w, r)
+	} else {
+		proxy := httputil.ReverseProxy{Director:director}
+		proxy.ServeHTTP(w, r)
+	}
+
 }

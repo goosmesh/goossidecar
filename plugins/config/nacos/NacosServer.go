@@ -1,8 +1,10 @@
 package nacos
 
 import (
+	"github.com/goosmesh/goos/core/utils/alg"
 	"github.com/goosmesh/goossidecar/plugins/config/common"
 	"github.com/prometheus/common/log"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -11,7 +13,23 @@ func StartServer()  {
 	log.Info("start nacos proxy")
 
 	//http.HandleFunc("/nacos/v1/cs/configs", nacosConfigs)
-	rpConfigs := common.RProxy{Host: common.DEFAULT_GOOS_HOST, Path: common.API_CONFIG}
+
+	modifyResponse := func(resp *http.Response, w http.ResponseWriter) error {
+		rs, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
+		bs := string(rs)
+		okData, err := alg.RsaDecrypt(bs)
+		if err != nil {
+			return err
+		}
+		log.Info(okData)
+		_, _ = w.Write([] byte(okData))
+		return nil
+	}
+
+	rpConfigs := common.RProxy{Host: common.DEFAULT_GOOS_HOST, Path: common.API_CONFIG, ModifyResponse: modifyResponse}
 	rpConfigsListener := common.RProxy{Host: common.DEFAULT_GOOS_HOST, Path: common.API_CONFIG_LISTENER}
 	http.HandleFunc("/nacos/v1/cs/configs", rpConfigs.ServeHTTP)
 	http.HandleFunc("/nacos/v1/cs/configs/listener", rpConfigsListener.ServeHTTP)
